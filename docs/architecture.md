@@ -2,7 +2,14 @@
 
 ## Current Shell
 
+The repo now contains two mobile clients:
+
+- an Expo / React Native prototype at the repo root
+- a Flutter client in [flutter_app](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app)
+
 The app is a single-screen Expo shell. `package.json` defines Expo start targets for iOS, Android, and web, with Expo `~53.0.9`, React `19.0.0`, and React Native `0.79.2`. `app.json` sets a portrait, light-theme app with tablet support on iOS and edge-to-edge enabled on Android.
+
+The Flutter client is a separate native-targeted shell. `flutter_app/lib/main.dart` registers the same five concepts, while `flutter_app/android/` and `flutter_app/ios/` provide the native project structure needed for phone installs and beta distribution.
 
 `App.js` is the runtime entry point. It:
 
@@ -23,6 +30,9 @@ There is still no navigation library, backend client, persistence layer, or shar
 - `src/features/sin-eater/index.js`: ritual confession demo with staged progression from compose to purge.
 - `src/features/nomenclator/index.js`: companion-memory demo with people profiles, context switching, and backstage prompt feeds.
 - `src/features/moirologist/index.js`: affirmation-squad demo with setback selection, urgency control, and animated supporter bursts.
+- `flutter_app/lib/main.dart`: Flutter concept shell and feature registry.
+- `flutter_app/lib/theme/app_theme.dart`: Flutter palette and theme contract.
+- `flutter_app/lib/features/*.dart`: five Flutter feature implementations mirroring the same concepts for iPhone and Android builds.
 
 ## Feature Module Contract
 

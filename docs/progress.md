@@ -15,6 +15,11 @@ Status verified against the filesystem and source files in the current working t
   - `src/features/nomenclator/index.js`
   - `src/features/moirologist/index.js`
 - Each feature exports the shared metadata contract plus a concrete React Native `Component`, so the tab rail can switch across five working in-app demos.
+- A separate Flutter client now exists in `flutter_app/` with native `ios/` and `android/` project directories.
+- The Flutter shell in `flutter_app/lib/main.dart` also exposes all five concept demos through a single in-app selector.
+- Flutter verification passed:
+  - `flutter analyze`
+  - `flutter test`
 
 ## Implemented Feature Demos
 
@@ -29,8 +34,9 @@ Status verified against the filesystem and source files in the current working t
 - There is no navigation system beyond the single-screen shell in `App.js`.
 - There is no backend integration, persistence layer, authentication flow, or networked multi-user state.
 - There is no notification integration or platform-specific mobile surface such as widgets, wearable delivery, or health integrations.
-- There are no automated tests in the current repo snapshot.
+- The Expo client still has no automated tests in the current repo snapshot.
 - Feature implementations are still prototype-style: sample data, local state, and in-file styles rather than production data models or shared UI primitives.
+- The Flutter client is ready for local builds, but actual TestFlight / Play Console distribution still requires your real bundle IDs, signing, and store configuration.
 
 ## Current Risk
 
