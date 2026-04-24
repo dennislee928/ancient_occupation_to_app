@@ -8,27 +8,33 @@ Status verified against the filesystem and source files in the current working t
 - Expo configuration exists in `app.json` with portrait orientation, light UI, iOS tablet support, and Android edge-to-edge enabled.
 - A root app shell exists in `App.js`.
 - Shared color tokens exist in `src/theme.js`.
-- One feature module file exists: `src/features/nomenclator/index.js`.
-
-## Present But Placeholder-Only
-
-- The root shell is still a static concept browser, not a production app flow.
-- `src/features/nomenclator/index.js` exports metadata plus a placeholder component that only renders `Pending worker implementation.`
-
-## Missing Or Incomplete
-
-- `App.js` imports five feature modules, but four of those files are missing:
+- All five feature module files exist and are wired into `App.js`:
   - `src/features/whipping-boy/index.js`
   - `src/features/royal-taster/index.js`
   - `src/features/sin-eater/index.js`
+  - `src/features/nomenclator/index.js`
   - `src/features/moirologist/index.js`
-- The directories for those four features exist, but they are empty.
-- There is no navigation system, backend integration, persistence layer, authentication flow, notification integration, or platform-specific mobile surface such as widgets or watch delivery.
-- There are no tests and no feature implementation code beyond the single placeholder module.
+- Each feature exports the shared metadata contract plus a concrete React Native `Component`, so the tab rail can switch across five working in-app demos.
+
+## Implemented Feature Demos
+
+- `Whipping Boy`: interactive accountability pact demo with goal, partner, and consequence selection plus consent and pressure feedback.
+- `Royal Food Taster`: message triage demo with phrase detection, toxicity scoring, deadline extraction, and a filtered safe brief.
+- `Sin Eater`: staged confession ritual demo with sealing, consumption, purge, and purification states.
+- `Nomenclator`: live recall demo with person switching, situational contexts, and companion prompt feeds.
+- `Moirologist`: affirmation squad demo with selectable setbacks, urgency modes, and animated supporter bursts.
+
+## Missing Or Incomplete
+
+- There is no navigation system beyond the single-screen shell in `App.js`.
+- There is no backend integration, persistence layer, authentication flow, or networked multi-user state.
+- There is no notification integration or platform-specific mobile surface such as widgets, wearable delivery, or health integrations.
+- There are no automated tests in the current repo snapshot.
+- Feature implementations are still prototype-style: sample data, local state, and in-file styles rather than production data models or shared UI primitives.
 
 ## Current Risk
 
-The current source tree is internally inconsistent: `App.js` references feature modules that do not exist on disk. Until those files are added or the imports are reduced to match the filesystem, the shell should be treated as incomplete.
+The repo is now internally consistent at the module level, but the current implementations are prototype demos rather than production-ready mobile features. The main risk is architectural, not missing files: all behavior is local-only and reload-resets state.
 
 ## Git State
 
