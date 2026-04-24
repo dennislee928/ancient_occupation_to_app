@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/ios/Flutter/Debug-Secrets.xcconfig
+/ios/Flutter/Release-Secrets.xcconfig
+/ios/Runner/ExportOptions.plist

@@ -68,3 +68,9 @@ flutter build appbundle --release
 - Configure release signing for both platforms.
 - Decide whether TestFlight / Play Internal Testing or Firebase App Distribution is your first tester channel.
 - Add real backend, auth, and notifications if you want these demos to become multi-user test builds instead of local-only prototypes.
+
+## Repo Helpers
+
+- [android/key.properties.example](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/android/key.properties.example): Android signing template
+- [ios/Flutter/Release-Secrets.xcconfig.example](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/ios/Flutter/Release-Secrets.xcconfig.example): iOS signing template
+- [../docs/flutter-release-checklist.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/flutter-release-checklist.md): release and tester checklist
