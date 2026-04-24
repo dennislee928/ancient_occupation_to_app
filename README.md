@@ -1,6 +1,11 @@
 # ancient_occupation_to_app
 
-Expo / React Native prototype that translates five obscure ancient occupations into five iOS/Android social-product demos.
+Dual-client prototype repo:
+
+- Expo / React Native prototype at the repo root
+- Flutter client with native iOS/Android targets in [flutter_app](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app)
+
+Both clients translate five obscure ancient occupations into five social-product demos.
 
 ## Concepts
 
@@ -23,6 +28,13 @@ Other available scripts:
 - `npm run start`
 - `npm run web`
 
+Flutter client:
+
+```bash
+cd flutter_app
+flutter run
+```
+
 ## Structure
 
 - [App.js](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/App.js): mobile shell that switches between the five demos.
@@ -30,3 +42,4 @@ Other available scripts:
 - [docs/implementation-plans.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/implementation-plans.md): five implementation plans derived from the spec.
 - [docs/architecture.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/architecture.md): current Expo shell and feature-module contract.
 - [docs/progress.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/progress.md): verified implementation status.
+- [flutter_app/README.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/README.md): Flutter build and beta-distribution notes.

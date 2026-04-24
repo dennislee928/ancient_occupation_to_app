@@ -1,16 +1,70 @@
-# flutter_app
+# Ancient Occupation Lab Flutter App
 
-A new Flutter project.
+Flutter client for the same five concepts already prototyped in the Expo app, but with real native iOS and Android project targets so you can install builds on phones and ship alpha or beta tests.
 
-## Getting Started
+## Included Demos
 
-This project is a starting point for a Flutter application.
+- `Whipping Boy`: consensual accountability pact with partner consequence simulation
+- `Royal Food Taster`: message interception, pressure scoring, and safe brief delivery
+- `Sin Eater`: staged confession, consume-once flow, and purge ritual
+- `Nomenclator`: social memory prompts with backstage companion cues
+- `Moirologist`: one-tap validation squad with exaggerated support bursts
 
-A few resources to get you started if this is your first Flutter project:
+## Local Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+cd flutter_app
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Useful targets:
+
+```bash
+flutter run -d ios
+flutter run -d android
+```
+
+## Verification
+
+```bash
+flutter analyze
+flutter test
+```
+
+## Beta Distribution
+
+### iPhone via TestFlight
+
+1. Open `ios/Runner.xcworkspace` in Xcode.
+2. Set your Apple team and replace the default bundle identifier with your own.
+3. Update signing for the `Runner` target.
+4. Archive the app in Xcode and upload it to App Store Connect.
+5. Add friends as internal or external testers in TestFlight.
+
+CLI build option:
+
+```bash
+flutter build ipa --release
+```
+
+### Android via Play Internal Testing
+
+1. Set your final `applicationId` and signing config.
+2. Build an Android App Bundle.
+3. Upload it to Google Play Console under Internal testing.
+4. Add the tester email list and share the opt-in link.
+
+CLI build option:
+
+```bash
+flutter build appbundle --release
+```
+
+## Before Publishing
+
+- Replace default bundle IDs and package names with your own.
+- Add proper app icons and splash assets.
+- Configure release signing for both platforms.
+- Decide whether TestFlight / Play Internal Testing or Firebase App Distribution is your first tester channel.
+- Add real backend, auth, and notifications if you want these demos to become multi-user test builds instead of local-only prototypes.

@@ -1,122 +1,254 @@
 import 'package:flutter/material.dart';
 
+import 'features/moirologist_feature.dart';
+import 'features/nomenclator_feature.dart';
+import 'features/royal_taster_feature.dart';
+import 'features/sin_eater_feature.dart';
+import 'features/whipping_boy_feature.dart';
+import 'theme/app_theme.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(const AncientOccupationFlutterApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AncientOccupationFlutterApp extends StatelessWidget {
+  const AncientOccupationFlutterApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'Ancient Occupation Lab',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.build(),
+      home: const AncientLabHome(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class AncientLabHome extends StatefulWidget {
+  const AncientLabHome({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AncientLabHome> createState() => _AncientLabHomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AncientLabHomeState extends State<AncientLabHome> {
+  final features = const [
+    _FeatureMeta(
+      id: 'whipping-boy',
+      shortLabel: 'Whipping Boy',
+      kicker: 'Plan 1',
+      title: 'Whipping Boy',
+      tagline: 'Consensual accountability pacts with partner-bound consequences.',
+      summary:
+          'A mobile habit pact demo that turns social guilt into follow-through through reversible, agreed partner impact.',
+      meta: ['Accountability', 'Precommitment', 'Peer pact'],
+      accent: Color(0xFFB4572F),
+      child: WhippingBoyFeature(),
+    ),
+    _FeatureMeta(
+      id: 'royal-taster',
+      shortLabel: 'Royal Taster',
+      kicker: 'Plan 2',
+      title: 'Royal Food Taster',
+      tagline: 'Stressful messages are intercepted before emotional impact lands.',
+      summary:
+          'A trusted digital taster screens high-pressure messages, strips away emotional toxins, and forwards only the useful brief.',
+      meta: ['Emotional firewall', 'Delegation', 'Safe brief'],
+      accent: Color(0xFF2F6A61),
+      child: RoyalTasterFeature(),
+    ),
+    _FeatureMeta(
+      id: 'sin-eater',
+      shortLabel: 'Sin Eater',
+      kicker: 'Plan 3',
+      title: 'Sin Eater',
+      tagline: 'Read-once confession, ritual consumption, and purge.',
+      summary:
+          'A private catharsis flow where a trusted witness consumes the burden exactly once before it is irreversibly deleted.',
+      meta: ['Catharsis', 'Ritual', 'Ephemeral trust'],
+      accent: Color(0xFF7A4D95),
+      child: SinEaterFeature(),
+    ),
+    _FeatureMeta(
+      id: 'nomenclator',
+      shortLabel: 'Nomenclator',
+      kicker: 'Plan 4',
+      title: 'Nomenclator',
+      tagline: 'Backstage memory prompts for live social recall.',
+      summary:
+          'A companion-fed watch or AR prompt system for remembering names, context, and safe openers during real encounters.',
+      meta: ['Memory support', 'Wearables', 'Companion mode'],
+      accent: Color(0xFF26638E),
+      child: NomenclatorFeature(),
+    ),
+    _FeatureMeta(
+      id: 'moirologist',
+      shortLabel: 'Moirologist',
+      kicker: 'Plan 5',
+      title: 'Moirologist',
+      tagline: 'Instant irrational validation from a trusted squad.',
+      summary:
+          'A one-tap affirmation rescue where your chosen squad floods the moment with exaggerated support instead of advice.',
+      meta: ['Widget logic', 'Affirmation', 'Support squad'],
+      accent: Color(0xFFC06A3B),
+      child: MoirologistFeature(),
+    ),
+  ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  int activeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final active = features[activeIndex];
+
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 18, 18, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppTheme.card,
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: AppTheme.line),
+                      ),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ancient Occupation to App',
+                            style: TextStyle(
+                              color: AppTheme.accent,
+                              fontSize: 12,
+                              letterSpacing: 1.8,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Five speculative mobile products from five forgotten jobs.',
+                            style: TextStyle(
+                              color: AppTheme.ink,
+                              fontSize: 34,
+                              height: 1.0,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          SizedBox(height: 14),
+                          Text(
+                            'This Flutter client gives you a real iOS and Android project for device installs, internal beta distribution, and rapid iteration with friends.',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 48,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: features.length,
+                        separatorBuilder: (_, _) => const SizedBox(width: 10),
+                        itemBuilder: (context, index) {
+                          final feature = features[index];
+                          final isActive = index == activeIndex;
+                          return ChoiceChip(
+                            label: Text(feature.shortLabel),
+                            selected: isActive,
+                            selectedColor: feature.accent,
+                            labelStyle: TextStyle(
+                              color: isActive ? Colors.white : AppTheme.ink,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            onSelected: (_) => setState(() => activeIndex = index),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        color: AppTheme.card,
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: AppTheme.line),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            active.kicker,
+                            style: TextStyle(
+                              color: active.accent,
+                              letterSpacing: 1.8,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            active.title,
+                            style: const TextStyle(
+                              color: AppTheme.ink,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(active.tagline),
+                          const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: active.meta
+                                .map((item) => Chip(label: Text(item)))
+                                .toList(),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(active.summary),
+                          const SizedBox(height: 18),
+                          active.child,
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
+}
+
+class _FeatureMeta {
+  const _FeatureMeta({
+    required this.id,
+    required this.shortLabel,
+    required this.kicker,
+    required this.title,
+    required this.tagline,
+    required this.summary,
+    required this.meta,
+    required this.accent,
+    required this.child,
+  });
+
+  final String id;
+  final String shortLabel;
+  final String kicker;
+  final String title;
+  final String tagline;
+  final String summary;
+  final List<String> meta;
+  final Color accent;
+  final Widget child;
 }
