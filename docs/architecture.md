@@ -11,6 +11,14 @@ The app is a single-screen Expo shell. `package.json` defines Expo start targets
 
 The Flutter client is a separate native-targeted shell. `flutter_app/lib/main.dart` registers the same five concepts, while `flutter_app/android/` and `flutter_app/ios/` provide the native project structure needed for phone installs and beta distribution.
 
+Release-prep files now also exist around that Flutter client:
+
+- `flutter_app/assets/branding/`: source icon and splash assets
+- `flutter_app/android/key.properties.example`: Android signing template
+- `flutter_app/ios/Flutter/Release-Secrets.xcconfig.example`: iOS signing template
+- `.github/workflows/flutter-ci.yml`: CI for analyze/test
+- `.github/workflows/flutter-release.yml`: manual release-validation workflow
+
 `App.js` is the runtime entry point. It:
 
 - imports one module per feature from `src/features/*`

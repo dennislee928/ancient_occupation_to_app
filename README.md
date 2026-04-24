@@ -35,6 +35,14 @@ cd flutter_app
 flutter run
 ```
 
+Flutter verification:
+
+```bash
+cd flutter_app
+flutter analyze
+flutter test
+```
+
 ## Structure
 
 - [App.js](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/App.js): mobile shell that switches between the five demos.
@@ -42,4 +50,7 @@ flutter run
 - [docs/implementation-plans.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/implementation-plans.md): five implementation plans derived from the spec.
 - [docs/architecture.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/architecture.md): current Expo shell and feature-module contract.
 - [docs/progress.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/progress.md): verified implementation status.
+- [docs/flutter-release-checklist.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/flutter-release-checklist.md): TestFlight / Play Internal Testing release checklist.
 - [flutter_app/README.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/README.md): Flutter build and beta-distribution notes.
+- [.github/workflows/flutter-ci.yml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/.github/workflows/flutter-ci.yml): Flutter analyze/test CI.
+- [.github/workflows/flutter-release.yml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/.github/workflows/flutter-release.yml): manual release-validation workflow for Android and iOS.

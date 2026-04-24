@@ -17,6 +17,11 @@ Status verified against the filesystem and source files in the current working t
 - Each feature exports the shared metadata contract plus a concrete React Native `Component`, so the tab rail can switch across five working in-app demos.
 - A separate Flutter client now exists in `flutter_app/` with native `ios/` and `android/` project directories.
 - The Flutter shell in `flutter_app/lib/main.dart` also exposes all five concept demos through a single in-app selector.
+- The Flutter client now has:
+  - release-oriented bundle ids and versioning
+  - generated launcher icons and splash screens
+  - Android signing placeholders and iOS signing templates
+  - GitHub Actions workflows for CI and release validation
 - Flutter verification passed:
   - `flutter analyze`
   - `flutter test`
@@ -37,6 +42,9 @@ Status verified against the filesystem and source files in the current working t
 - The Expo client still has no automated tests in the current repo snapshot.
 - Feature implementations are still prototype-style: sample data, local state, and in-file styles rather than production data models or shared UI primitives.
 - The Flutter client is ready for local builds, but actual TestFlight / Play Console distribution still requires your real bundle IDs, signing, and store configuration.
+- Local release-build verification was partially blocked by this machine's environment:
+  - Android SDK is not configured here
+  - iOS device/archive output is not fully configured here
 
 ## Current Risk
 
