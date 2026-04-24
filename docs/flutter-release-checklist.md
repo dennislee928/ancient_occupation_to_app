@@ -2,6 +2,9 @@
 
 ## App Identity
 
+- Copy [flutter_app/release.env.example](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/release.env.example) to `flutter_app/release.env`.
+- Fill in your real app name, bundle ids, Apple team id, and version values.
+- Run [flutter_app/scripts/configure_release.sh](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/scripts/configure_release.sh).
 - Confirm the Flutter client version in [flutter_app/pubspec.yaml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/pubspec.yaml).
 - Decide whether to keep or change the placeholder bundle id:
   - iOS: `io.github.dennisleedennis.ancientoccupationlab`

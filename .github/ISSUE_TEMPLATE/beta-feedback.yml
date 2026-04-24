@@ -1,0 +1,67 @@
+name: Beta Feedback
+description: Capture structured feedback from internal alpha or beta testers
+title: "[Beta] "
+labels:
+  - beta-feedback
+body:
+  - type: dropdown
+    id: client
+    attributes:
+      label: Client
+      options:
+        - Flutter
+        - Expo
+    validations:
+      required: true
+
+  - type: dropdown
+    id: concept
+    attributes:
+      label: Concept
+      options:
+        - Whipping Boy
+        - Royal Food Taster
+        - Sin Eater
+        - Nomenclator
+        - Moirologist
+        - Overall shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: Describe the bug, confusion, or reaction in plain language.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps or trigger
+      description: If this is a bug, list the steps. If it is product feedback, describe the situation.
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What did you expect instead?
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - blocker
+        - major
+        - minor
+        - polish
+    validations:
+      required: true
+
+  - type: textarea
+    id: device
+    attributes:
+      label: Device and OS
+      description: Example: iPhone 15 iOS 18.1, Pixel 8 Android 15
