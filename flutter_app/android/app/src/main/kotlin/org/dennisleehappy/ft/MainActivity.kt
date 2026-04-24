@@ -1,4 +1,4 @@
-package io.github.dennisleedennis.ancientoccupationlab
+package org.dennisleehappy.ft
 
 import io.flutter.embedding.android.FlutterActivity
 

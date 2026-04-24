@@ -6,9 +6,11 @@
 - Fill in your real app name, bundle ids, Apple team id, and version values.
 - Run [flutter_app/scripts/configure_release.sh](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/scripts/configure_release.sh).
 - Confirm the Flutter client version in [flutter_app/pubspec.yaml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/pubspec.yaml).
-- Decide whether to keep or change the placeholder bundle id:
-  - iOS: `io.github.dennisleedennis.ancientoccupationlab`
-  - Android: `io.github.dennisleedennis.ancientoccupationlab`
+- Current default repo identity:
+  - app name: `專業朋友殺手`
+  - iOS: `org.dennisleehappy.ft`
+  - Android: `org.dennisleehappy.ft`
+- Decide whether to keep or change those values before submission.
 - Increment `version:` for every tester build you distribute.
 
 ## Android Signing

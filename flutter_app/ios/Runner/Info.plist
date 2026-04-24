@@ -5,7 +5,7 @@
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
-		<string>Ancient Occupation Lab</string>
+		<string>專業朋友殺手</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
-		<string>AncientOccupationLab</string>
+		<string>ProfessionalFriendshipTerminator</string>
 		<key>ITSAppUsesNonExemptEncryption</key>
 		<false/>
 		<key>CFBundlePackageType</key>

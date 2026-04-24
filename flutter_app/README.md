@@ -1,4 +1,4 @@
-# Ancient Occupation Lab Flutter App
+# 專業朋友殺手 Flutter App
 
 Flutter client for the same five concepts already prototyped in the Expo app, but with real native iOS and Android project targets so you can install builds on phones and ship alpha or beta tests.
 
@@ -34,6 +34,12 @@ That script updates:
 - iOS bundle id
 - Apple team placeholder templates
 - Flutter version string
+
+Current default release identity in this repo:
+
+- app name: `專業朋友殺手`
+- Android application id: `org.dennisleehappy.ft`
+- iOS bundle id: `org.dennisleehappy.ft`
 
 Useful targets:
 

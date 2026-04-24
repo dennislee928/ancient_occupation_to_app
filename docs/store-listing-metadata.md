@@ -4,7 +4,7 @@ Use this as the first-pass store copy for TestFlight notes, App Store Connect, a
 
 ## Product Name
 
-`Ancient Occupation Lab`
+`專業朋友殺手`
 
 ## One-Line Positioning
 
@@ -24,7 +24,7 @@ Five social-product demos inspired by forgotten historical roles.
 
 ## Full Description
 
-Ancient Occupation Lab turns unusual historical jobs into modern mobile product experiments.
+專業朋友殺手 turns unusual historical jobs into modern mobile product experiments.
 
 Inside the app are five interactive concepts:
 

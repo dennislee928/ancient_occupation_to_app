@@ -17,7 +17,7 @@ class AncientOccupationFlutterApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ancient Occupation Lab',
+      title: '專業朋友殺手',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(),
       home: const AncientLabHome(),

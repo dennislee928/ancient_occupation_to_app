@@ -18,10 +18,15 @@ Status verified against the filesystem and source files in the current working t
 - A separate Flutter client now exists in `flutter_app/` with native `ios/` and `android/` project directories.
 - The Flutter shell in `flutter_app/lib/main.dart` also exposes all five concept demos through a single in-app selector.
 - The Flutter client now has:
+  - branded app identity for `專業朋友殺手`
+  - Android application id `org.dennisleehappy.ft`
+  - iOS bundle id `org.dennisleehappy.ft`
   - release-oriented bundle ids and versioning
   - generated launcher icons and splash screens
   - Android signing placeholders and iOS signing templates
   - GitHub Actions workflows for CI and release validation
+  - store-listing draft copy, privacy manifest, and tester feedback template
+  - a release configuration script at `flutter_app/scripts/configure_release.sh`
 - Flutter verification passed:
   - `flutter analyze`
   - `flutter test`
@@ -41,10 +46,25 @@ Status verified against the filesystem and source files in the current working t
 - There is no notification integration or platform-specific mobile surface such as widgets, wearable delivery, or health integrations.
 - The Expo client still has no automated tests in the current repo snapshot.
 - Feature implementations are still prototype-style: sample data, local state, and in-file styles rather than production data models or shared UI primitives.
-- The Flutter client is ready for local builds, but actual TestFlight / Play Console distribution still requires your real bundle IDs, signing, and store configuration.
+- The Flutter client is ready for local builds, but actual TestFlight / Play Console distribution still requires:
+  - your real Apple team id in `flutter_app/release.env` and `ios/Flutter/Release-Secrets.xcconfig`
+  - an Android upload keystore and `flutter_app/android/key.properties`
+  - actual App Store Connect and Google Play Console upload steps
 - Local release-build verification was partially blocked by this machine's environment:
   - Android SDK is not configured here
   - iOS device/archive output is not fully configured here
+
+## Suggested Resume Point
+
+When work resumes, the shortest path to external testing is:
+
+1. Copy `flutter_app/release.env.example` to `flutter_app/release.env` and set `IOS_TEAM_ID`.
+2. Copy `flutter_app/ios/Flutter/Release-Secrets.xcconfig.example` to `flutter_app/ios/Flutter/Release-Secrets.xcconfig`.
+3. Copy `flutter_app/android/key.properties.example` to `flutter_app/android/key.properties` and add the keystore file.
+4. Run `bash flutter_app/scripts/configure_release.sh flutter_app/release.env`.
+5. Build and upload:
+   - `flutter build ipa --release`
+   - `flutter build appbundle --release`
 
 ## Current Risk
 
@@ -52,4 +72,4 @@ The repo is now internally consistent at the module level, but the current imple
 
 ## Git State
 
-`git status --short` currently reports the visible app files as untracked in this working tree. This documentation therefore describes the current filesystem contents, not a committed release milestone.
+The working tree currently contains local modifications and new release-support files. This documentation describes the current filesystem contents, not a committed release milestone.
