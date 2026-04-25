@@ -32,14 +32,22 @@ Layering:
 - `API_PORT`
 - `LOG_LEVEL`
 - `SUPABASE_DATABASE_URL`
+- `SUPABASE_URL`
+- `SUPABASE_API_KEY`
 - `SUPABASE_JWT_SECRET`
 
 Use the transaction-mode pooler URL here for runtime traffic.
 
 ## Local Auth
 
-Until full Supabase JWKS verification is added, development mode supports:
+Auth verification order:
+
+1. Supabase JWKS from `SUPABASE_URL/auth/v1/.well-known/jwks.json`
+2. Supabase Auth server fallback via `GET /auth/v1/user` using `SUPABASE_API_KEY`
+3. Legacy HS256 verification via `SUPABASE_JWT_SECRET`
+
+Development mode still supports:
 
 - `X-Debug-User-ID: <uuid-or-stable-id>`
 
-If `SUPABASE_JWT_SECRET` is present, the API will also accept HS256 bearer tokens and use the `sub` claim as the authenticated user id.
+This header is only accepted outside production.

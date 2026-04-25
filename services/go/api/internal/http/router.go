@@ -27,6 +27,7 @@ type App struct {
 	config          config.Config
 	pool            *pgxpool.Pool
 	startedAt       time.Time
+	authVerifier    *auth.Verifier
 	profilesRepo    profiles.Repository
 	devicesRepo     devices.Repository
 	nomenclatorRepo nomenclator.Repository
@@ -37,6 +38,7 @@ func NewRouter(cfg config.Config, pool *pgxpool.Pool) nethttp.Handler {
 		config:          cfg,
 		pool:            pool,
 		startedAt:       time.Now().UTC(),
+		authVerifier:    auth.NewVerifier(cfg.SupabaseURL, cfg.SupabaseAPIKey, cfg.SupabaseJWTSecret),
 		profilesRepo:    profiles.NewRepository(pool),
 		devicesRepo:     devices.NewRepository(pool),
 		nomenclatorRepo: nomenclator.NewRepository(pool),
@@ -119,12 +121,7 @@ func (app App) requireAuth(next nethttp.Handler) nethttp.Handler {
 			return
 		}
 
-		if app.config.SupabaseJWTSecret == "" {
-			writeError(w, nethttp.StatusUnauthorized, "SUPABASE_JWT_SECRET is not configured; use X-Debug-User-ID in development")
-			return
-		}
-
-		user, err := auth.VerifyHS256Token(strings.TrimSpace(token), app.config.SupabaseJWTSecret)
+		user, err := app.authVerifier.Verify(r.Context(), strings.TrimSpace(token))
 		if err != nil {
 			writeError(w, nethttp.StatusUnauthorized, err.Error())
 			return
