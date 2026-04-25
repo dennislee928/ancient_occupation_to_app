@@ -4,3 +4,4 @@ spec_and_origin.md
 infra/env/*.env
 services/ruby/ops/vendor/bundle
 docs/github-actions-secrets.md
+/.ignore
