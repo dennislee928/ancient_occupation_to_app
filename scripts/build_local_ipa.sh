@@ -47,6 +47,27 @@ ensure_no_placeholder() {
   fi
 }
 
+extract_release_env_team_id() {
+  awk -F= '$1=="IOS_TEAM_ID"{gsub(/"/, "", $2); print $2}' "$RELEASE_ENV" | head -n1
+}
+
+extract_release_secrets_team_id() {
+  sed -n 's/^DEVELOPMENT_TEAM = //p' "$RELEASE_SECRETS" | head -n1
+}
+
+extract_export_options_team_id() {
+  sed -n '/<key>teamID<\/key>/{n;s/.*<string>\(.*\)<\/string>.*/\1/p;}' "$EXPORT_OPTIONS" | head -n1
+}
+
+validate_team_id() {
+  local value="$1"
+  local source_name="$2"
+
+  if [[ ! "$value" =~ ^[A-Z0-9]{10}$ ]]; then
+    die "$source_name must be your Apple Team ID in the form ABCDE12345. Current value: $value"
+  fi
+}
+
 skip_checks=false
 
 while [[ $# -gt 0 ]]; do
@@ -75,6 +96,18 @@ require_file "$EXPORT_OPTIONS" "Missing $EXPORT_OPTIONS. Copy $EXPORT_OPTIONS_EX
 ensure_no_placeholder "$RELEASE_ENV" 'CHANGE_ME' "release.env still contains CHANGE_ME. Set IOS_TEAM_ID before building."
 ensure_no_placeholder "$RELEASE_SECRETS" 'CHANGE_ME' "Release-Secrets.xcconfig still contains CHANGE_ME. Set DEVELOPMENT_TEAM before building."
 ensure_no_placeholder "$EXPORT_OPTIONS" 'CHANGE_ME' "ExportOptions.plist still contains CHANGE_ME. Set teamID before building."
+
+release_env_team_id="$(extract_release_env_team_id)"
+release_secrets_team_id="$(extract_release_secrets_team_id)"
+export_options_team_id="$(extract_export_options_team_id)"
+
+validate_team_id "$release_env_team_id" "flutter_app/release.env IOS_TEAM_ID"
+validate_team_id "$release_secrets_team_id" "flutter_app/ios/Flutter/Release-Secrets.xcconfig DEVELOPMENT_TEAM"
+validate_team_id "$export_options_team_id" "flutter_app/ios/Runner/ExportOptions.plist teamID"
+
+if [[ "$release_env_team_id" != "$release_secrets_team_id" || "$release_env_team_id" != "$export_options_team_id" ]]; then
+  die "Apple Team ID must match across release.env, Release-Secrets.xcconfig, and ExportOptions.plist."
+fi
 
 echo "Syncing release identity into Flutter platform files..."
 bash "$CONFIGURE_RELEASE_SCRIPT" "$RELEASE_ENV"
