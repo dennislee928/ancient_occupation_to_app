@@ -19,8 +19,8 @@ Status verified against the filesystem and source files in the current working t
 - The Flutter shell in `flutter_app/lib/main.dart` also exposes all five concept demos through a single in-app selector.
 - The Flutter client now has:
   - branded app identity for `專業朋友殺手`
-  - Android application id `org.dennisleehappy.ft`
-  - iOS bundle id `org.dennisleehappy.ft`
+  - Android application id `dev.friendshipkiller`
+  - iOS bundle id `dev.friendshipkiller`
   - release-oriented bundle ids and versioning
   - generated launcher icons and splash screens
   - Android signing placeholders and iOS signing templates

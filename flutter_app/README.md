@@ -65,8 +65,8 @@ That script updates:
 Current default release identity in this repo:
 
 - app name: `專業朋友殺手`
-- Android application id: `org.dennisleehappy.ft`
-- iOS bundle id: `org.dennisleehappy.ft`
+- Android application id: `dev.friendshipkiller`
+- iOS bundle id: `dev.friendshipkiller`
 
 Useful targets:
 

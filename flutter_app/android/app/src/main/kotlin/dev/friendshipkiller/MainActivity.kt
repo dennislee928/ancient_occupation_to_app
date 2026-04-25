@@ -1,4 +1,4 @@
-package org.dennisleehappy.ft
+package dev.friendshipkiller
 
 import io.flutter.embedding.android.FlutterActivity
 
