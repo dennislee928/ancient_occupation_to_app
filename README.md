@@ -35,6 +35,18 @@ cd flutter_app
 flutter run
 ```
 
+Backend scaffolding:
+
+```bash
+docker compose -f infra/docker-compose.yml up --build go-api ruby-ops
+```
+
+Run migrations against Supabase:
+
+```bash
+docker compose -f infra/docker-compose.yml --profile ops run --rm migrator
+```
+
 Flutter verification:
 
 ```bash
@@ -50,9 +62,13 @@ flutter test
 - [docs/implementation-plans.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/implementation-plans.md): five implementation plans derived from the spec.
 - [docs/architecture.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/architecture.md): current Expo shell and feature-module contract.
 - [docs/progress.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/progress.md): verified implementation status.
+- [docs/backend-implementation-plan.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/backend-implementation-plan.md): backend architecture and phased implementation plan.
 - [docs/flutter-release-checklist.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/flutter-release-checklist.md): TestFlight / Play Internal Testing release checklist.
 - [docs/store-listing-metadata.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/store-listing-metadata.md): starter App Store / Play listing copy.
 - [docs/github-actions-secrets.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/docs/github-actions-secrets.md): secret names and setup steps for release workflows.
+- [services/go/api/README.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/services/go/api/README.md): Go API service notes.
+- [services/ruby/ops/README.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/services/ruby/ops/README.md): Ruby ops service notes.
+- [infra/docker-compose.yml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/infra/docker-compose.yml): local backend orchestration for Go, Ruby, migrations, and optional Mailpit.
 - [flutter_app/README.md](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/flutter_app/README.md): Flutter build and beta-distribution notes.
 - [.github/workflows/flutter-ci.yml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/.github/workflows/flutter-ci.yml): Flutter analyze/test CI.
 - [.github/workflows/flutter-release.yml](/Users/dennis_leedennis_lee/Documents/GitHub/ancient_occupation_to_app/.github/workflows/flutter-release.yml): manual release-validation workflow for Android and iOS.

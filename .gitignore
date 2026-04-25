@@ -1,4 +1,6 @@
 spec_and_origin.md
 /node_modules
 /.expo
+infra/env/*.env
+services/ruby/ops/vendor/bundle
 docs/github-actions-secrets.md
