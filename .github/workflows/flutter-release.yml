@@ -61,16 +61,25 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Build APK
+        run: flutter build apk --release --build-name="${{ inputs.build_name }}" --build-number="${{ inputs.build_number }}"
+
       - name: Build app bundle
         run: flutter build appbundle --release --build-name="${{ inputs.build_name }}" --build-number="${{ inputs.build_number }}"
 
-      - name: Upload Android artifact
+      - name: Upload Android APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: flutter_app/build/app/outputs/flutter-apk/*.apk
+
+      - name: Upload Android app bundle artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-appbundle
           path: flutter_app/build/app/outputs/bundle/release/*.aab
 
-  ios-release-validation:
+  ios-release:
     runs-on: macos-latest
     defaults:
       run:
@@ -95,10 +104,73 @@ jobs:
       - name: Test
         run: flutter test
 
+      - name: Configure iOS signing overrides
+        if: ${{ vars.IOS_BUNDLE_ID != '' && secrets.APPLE_TEAM_ID != '' }}
+        shell: bash
+        run: |
+          cp ios/Flutter/Release-Secrets.xcconfig.example ios/Flutter/Release-Secrets.xcconfig
+          perl -0pi -e 's/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = '"$APPLE_TEAM_ID"'/g' ios/Flutter/Release-Secrets.xcconfig
+          perl -0pi -e 's/PRODUCT_BUNDLE_IDENTIFIER = .*/PRODUCT_BUNDLE_IDENTIFIER = '"$IOS_BUNDLE_ID"'/g' ios/Flutter/Release-Secrets.xcconfig
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          IOS_BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID }}
+
+      - name: Install iOS signing certificate
+        if: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' }}
+        shell: bash
+        run: |
+          CERT_PATH="$RUNNER_TEMP/cert.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/build.keychain-db"
+          echo "$APPLE_CERTIFICATE_P12_BASE64" | base64 --decode > "$CERT_PATH"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+        env:
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD || github.run_id }}
+
+      - name: Install provisioning profile
+        if: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' }}
+        shell: bash
+        run: |
+          PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          echo "$APPLE_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$(security cms -D -i "$PROFILE_PATH")")
+          cp "$PROFILE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+        env:
+          APPLE_PROVISIONING_PROFILE_BASE64: ${{ secrets.APPLE_PROVISIONING_PROFILE_BASE64 }}
+
+      - name: Configure iOS export options
+        if: ${{ secrets.APPLE_TEAM_ID != '' }}
+        shell: bash
+        run: |
+          cp ios/ExportOptions.testflight.plist.example ios/ExportOptions.plist
+          perl -0pi -e 's#<string>CHANGE_ME</string>#<string>'"$APPLE_TEAM_ID"'</string>#g' ios/ExportOptions.plist
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Build signed iOS IPA
+        if: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' && secrets.APPLE_TEAM_ID != '' }}
+        run: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist --build-name="${{ inputs.build_name }}" --build-number="${{ inputs.build_number }}"
+
       - name: Build iOS release without codesign
+        if: ${{ !(secrets.APPLE_CERTIFICATE_P12_BASE64 != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' && secrets.APPLE_TEAM_ID != '') }}
         run: flutter build ios --release --no-codesign --build-name="${{ inputs.build_name }}" --build-number="${{ inputs.build_number }}"
 
-      - name: Upload iOS artifact
+      - name: Upload signed iOS IPA artifact
+        if: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' && secrets.APPLE_TEAM_ID != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: flutter_app/build/ios/ipa/*.ipa
+
+      - name: Upload unsigned iOS app artifact
+        if: ${{ !(secrets.APPLE_CERTIFICATE_P12_BASE64 != '' && secrets.APPLE_CERTIFICATE_PASSWORD != '' && secrets.APPLE_PROVISIONING_PROFILE_BASE64 != '' && secrets.APPLE_TEAM_ID != '') }}
         uses: actions/upload-artifact@v4
         with:
           name: ios-runner-app
