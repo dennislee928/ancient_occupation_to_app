@@ -81,7 +81,7 @@ perl -0pi -e "s/$OLD_IOS_ID_PATTERN/$NEW_IOS_ID_REPL/g" "$PBXPROJ" "$IOS_RELEASE
 perl -0pi -e "s/DEVELOPMENT_TEAM = .*/DEVELOPMENT_TEAM = $NEW_TEAM_REPL/g" "$IOS_RELEASE_SECRETS_EXAMPLE" "$IOS_DEBUG_SECRETS_EXAMPLE"
 perl -0pi -e "s/MARKETING_VERSION = [^;]+;/MARKETING_VERSION = $NEW_BUILD_NAME_REPL;/g" "$PBXPROJ"
 
-NEW_KOTLIN_PATH="$ROOT_DIR/android/app/src/main/kotlin/${ANDROID_APPLICATION_ID//./\/}/MainActivity.kt"
+NEW_KOTLIN_PATH="$ROOT_DIR/android/app/src/main/kotlin/${ANDROID_APPLICATION_ID//.//}/MainActivity.kt"
 OLD_KOTLIN_PATH="$(find "$ROOT_DIR/android/app/src/main/kotlin" -name MainActivity.kt | head -n1 || true)"
 
 if [[ -n "$OLD_KOTLIN_PATH" && -f "$OLD_KOTLIN_PATH" && "$OLD_KOTLIN_PATH" != "$NEW_KOTLIN_PATH" ]]; then
