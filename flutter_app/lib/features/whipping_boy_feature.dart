@@ -23,8 +23,16 @@ class _WhippingBoyFeatureState extends State<WhippingBoyFeature> {
   ];
 
   static const consequences = [
-    ('Shared badge dims', 'Your partner carries a gray pact badge until tomorrow.', 1),
-    ('Partner loses a skip', 'They burn one support token from the streak board.', 2),
+    (
+      'Shared badge dims',
+      'Your partner carries a gray pact badge until tomorrow.',
+      1,
+    ),
+    (
+      'Partner loses a skip',
+      'They burn one support token from the streak board.',
+      2,
+    ),
     ('Extra follow-up duty', 'They log the miss and send one reminder.', 3),
   ];
 
@@ -38,7 +46,8 @@ class _WhippingBoyFeatureState extends State<WhippingBoyFeature> {
   List<bool> history = const [true, true, false, true, true, true, false];
 
   int get pressureScore {
-    final base = 18 +
+    final base =
+        18 +
         misses * 11 +
         consequences[consequenceIndex].$3 * 13 +
         partners[partnerIndex].$3 +
@@ -136,7 +145,8 @@ class _WhippingBoyFeatureState extends State<WhippingBoyFeature> {
                   ),
                   Switch(
                     value: consentEnabled,
-                    onChanged: (value) => setState(() => consentEnabled = value),
+                    onChanged: (value) =>
+                        setState(() => consentEnabled = value),
                   ),
                 ],
               ),
@@ -201,7 +211,10 @@ class _WhippingBoyFeatureState extends State<WhippingBoyFeature> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: _StatCard(label: 'Hit rate', value: '$completionRate%'),
+                    child: _StatCard(
+                      label: 'Hit rate',
+                      value: '$completionRate%',
+                    ),
                   ),
                 ],
               ),
@@ -270,10 +283,7 @@ class _WhippingBoyFeatureState extends State<WhippingBoyFeature> {
                 ],
               ),
               const SizedBox(height: 10),
-              TextButton(
-                onPressed: resetDemo,
-                child: const Text('Reset demo'),
-              ),
+              TextButton(onPressed: resetDemo, child: const Text('Reset demo')),
             ],
           ),
         ),
@@ -331,10 +341,7 @@ class _OptionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (final child in children) ...[
-          child,
-          const SizedBox(height: 10),
-        ],
+        for (final child in children) ...[child, const SizedBox(height: 10)],
       ],
     );
   }
@@ -364,9 +371,7 @@ class _SelectableTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? const Color(0xFFF3E0D3) : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: selected ? AppTheme.accent : AppTheme.line,
-          ),
+          border: Border.all(color: selected ? AppTheme.accent : AppTheme.line),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

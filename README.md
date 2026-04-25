@@ -35,6 +35,15 @@ cd flutter_app
 flutter run
 ```
 
+Flutter against local Go API:
+
+```bash
+cd flutter_app
+flutter run \
+  --dart-define=API_BASE_URL=http://127.0.0.1:8080 \
+  --dart-define=API_DEBUG_USER_ID=11111111-1111-1111-1111-111111111111
+```
+
 Backend scaffolding:
 
 ```bash

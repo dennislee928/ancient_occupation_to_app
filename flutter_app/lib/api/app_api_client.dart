@@ -37,7 +37,8 @@ class AppApiClient {
   final http.Client _httpClient;
 
   bool get hasBaseUrl => baseUrl.trim().isNotEmpty;
-  bool get hasAuth => debugUserId.trim().isNotEmpty || bearerToken.trim().isNotEmpty;
+  bool get hasAuth =>
+      debugUserId.trim().isNotEmpty || bearerToken.trim().isNotEmpty;
   bool get isConfigured => hasBaseUrl && hasAuth;
 
   String get authMode {
@@ -59,7 +60,10 @@ class AppApiClient {
     final response = await _send('GET', '/v1/nomenclator/people');
     final people = _readList(response, 'people');
     return people
-        .map((item) => NomenclatorPersonCard.fromJson(item as Map<String, dynamic>))
+        .map(
+          (item) =>
+              NomenclatorPersonCard.fromJson(item as Map<String, dynamic>),
+        )
         .toList();
   }
 
@@ -91,7 +95,8 @@ class AppApiClient {
       body: {
         'person_card_id': personCardId,
         if (_present(contextLabel)) 'context_label': contextLabel!.trim(),
-        if (_present(companionUserId)) 'companion_user_id': companionUserId!.trim(),
+        if (_present(companionUserId))
+          'companion_user_id': companionUserId!.trim(),
       },
     );
     return NomenclatorSession.fromJson(_readObject(response, 'session'));
@@ -110,10 +115,7 @@ class AppApiClient {
     final response = await _send(
       'POST',
       '/v1/nomenclator/sessions/$sessionId/prompts',
-      body: {
-        'body': body,
-        'delivery_mode': deliveryMode,
-      },
+      body: {'body': body, 'delivery_mode': deliveryMode},
     );
     return NomenclatorPromptMessage.fromJson(_readObject(response, 'prompt'));
   }
@@ -136,7 +138,8 @@ class AppApiClient {
     final headers = <String, String>{
       'Accept': 'application/json',
       if (body != null) 'Content-Type': 'application/json',
-      if (bearerToken.trim().isNotEmpty) 'Authorization': 'Bearer ${bearerToken.trim()}',
+      if (bearerToken.trim().isNotEmpty)
+        'Authorization': 'Bearer ${bearerToken.trim()}',
       if (debugUserId.trim().isNotEmpty) 'X-Debug-User-ID': debugUserId.trim(),
     };
 

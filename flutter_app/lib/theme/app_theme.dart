@@ -41,16 +41,8 @@ class AppTheme {
           fontWeight: FontWeight.w800,
           color: ink,
         ),
-        bodyLarge: TextStyle(
-          fontSize: 15,
-          height: 1.6,
-          color: muted,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          height: 1.5,
-          color: muted,
-        ),
+        bodyLarge: TextStyle(fontSize: 15, height: 1.6, color: muted),
+        bodyMedium: TextStyle(fontSize: 14, height: 1.5, color: muted),
       ),
       cardTheme: CardThemeData(
         color: card,

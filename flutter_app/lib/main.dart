@@ -10,14 +10,13 @@ import 'features/whipping_boy_feature.dart';
 import 'theme/app_theme.dart';
 
 void main() {
-  runApp(AncientOccupationFlutterApp(apiClient: AppApiClient.fromEnvironment()));
+  runApp(
+    AncientOccupationFlutterApp(apiClient: AppApiClient.fromEnvironment()),
+  );
 }
 
 class AncientOccupationFlutterApp extends StatelessWidget {
-  const AncientOccupationFlutterApp({
-    required this.apiClient,
-    super.key,
-  });
+  const AncientOccupationFlutterApp({required this.apiClient, super.key});
 
   final AppApiClient apiClient;
 
@@ -33,10 +32,7 @@ class AncientOccupationFlutterApp extends StatelessWidget {
 }
 
 class AncientLabHome extends StatefulWidget {
-  const AncientLabHome({
-    required this.apiClient,
-    super.key,
-  });
+  const AncientLabHome({required this.apiClient, super.key});
 
   final AppApiClient apiClient;
 
@@ -49,67 +45,69 @@ class _AncientLabHomeState extends State<AncientLabHome> {
   late final Future<AppProfile> _profileFuture;
 
   List<_FeatureMeta> get features => [
-        const _FeatureMeta(
-          id: 'whipping-boy',
-          shortLabel: 'Whipping Boy',
-          kicker: 'Plan 1',
-          title: 'Whipping Boy',
-          tagline: 'Consensual accountability pacts with partner-bound consequences.',
-          summary:
-              'A mobile habit pact demo that turns social guilt into follow-through through reversible, agreed partner impact.',
-          meta: ['Accountability', 'Precommitment', 'Peer pact'],
-          accent: Color(0xFFB4572F),
-          child: WhippingBoyFeature(),
-        ),
-        const _FeatureMeta(
-          id: 'royal-taster',
-          shortLabel: 'Royal Taster',
-          kicker: 'Plan 2',
-          title: 'Royal Food Taster',
-          tagline: 'Stressful messages are intercepted before emotional impact lands.',
-          summary:
-              'A trusted digital taster screens high-pressure messages, strips away emotional toxins, and forwards only the useful brief.',
-          meta: ['Emotional firewall', 'Delegation', 'Safe brief'],
-          accent: Color(0xFF2F6A61),
-          child: RoyalTasterFeature(),
-        ),
-        const _FeatureMeta(
-          id: 'sin-eater',
-          shortLabel: 'Sin Eater',
-          kicker: 'Plan 3',
-          title: 'Sin Eater',
-          tagline: 'Read-once confession, ritual consumption, and purge.',
-          summary:
-              'A private catharsis flow where a trusted witness consumes the burden exactly once before it is irreversibly deleted.',
-          meta: ['Catharsis', 'Ritual', 'Ephemeral trust'],
-          accent: Color(0xFF7A4D95),
-          child: SinEaterFeature(),
-        ),
-        _FeatureMeta(
-          id: 'nomenclator',
-          shortLabel: 'Nomenclator',
-          kicker: 'Plan 4',
-          title: 'Nomenclator',
-          tagline: 'Backstage memory prompts for live social recall.',
-          summary:
-              'A companion-fed watch or AR prompt system for remembering names, context, and safe openers during real encounters.',
-          meta: const ['Memory support', 'Wearables', 'Companion mode'],
-          accent: const Color(0xFF26638E),
-          child: NomenclatorFeature(apiClient: widget.apiClient),
-        ),
-        const _FeatureMeta(
-          id: 'moirologist',
-          shortLabel: 'Moirologist',
-          kicker: 'Plan 5',
-          title: 'Moirologist',
-          tagline: 'Instant irrational validation from a trusted squad.',
-          summary:
-              'A one-tap affirmation rescue where your chosen squad floods the moment with exaggerated support instead of advice.',
-          meta: ['Widget logic', 'Affirmation', 'Support squad'],
-          accent: Color(0xFFC06A3B),
-          child: MoirologistFeature(),
-        ),
-      ];
+    const _FeatureMeta(
+      id: 'whipping-boy',
+      shortLabel: 'Whipping Boy',
+      kicker: 'Plan 1',
+      title: 'Whipping Boy',
+      tagline:
+          'Consensual accountability pacts with partner-bound consequences.',
+      summary:
+          'A mobile habit pact demo that turns social guilt into follow-through through reversible, agreed partner impact.',
+      meta: ['Accountability', 'Precommitment', 'Peer pact'],
+      accent: Color(0xFFB4572F),
+      child: WhippingBoyFeature(),
+    ),
+    const _FeatureMeta(
+      id: 'royal-taster',
+      shortLabel: 'Royal Taster',
+      kicker: 'Plan 2',
+      title: 'Royal Food Taster',
+      tagline:
+          'Stressful messages are intercepted before emotional impact lands.',
+      summary:
+          'A trusted digital taster screens high-pressure messages, strips away emotional toxins, and forwards only the useful brief.',
+      meta: ['Emotional firewall', 'Delegation', 'Safe brief'],
+      accent: Color(0xFF2F6A61),
+      child: RoyalTasterFeature(),
+    ),
+    const _FeatureMeta(
+      id: 'sin-eater',
+      shortLabel: 'Sin Eater',
+      kicker: 'Plan 3',
+      title: 'Sin Eater',
+      tagline: 'Read-once confession, ritual consumption, and purge.',
+      summary:
+          'A private catharsis flow where a trusted witness consumes the burden exactly once before it is irreversibly deleted.',
+      meta: ['Catharsis', 'Ritual', 'Ephemeral trust'],
+      accent: Color(0xFF7A4D95),
+      child: SinEaterFeature(),
+    ),
+    _FeatureMeta(
+      id: 'nomenclator',
+      shortLabel: 'Nomenclator',
+      kicker: 'Plan 4',
+      title: 'Nomenclator',
+      tagline: 'Backstage memory prompts for live social recall.',
+      summary:
+          'A companion-fed watch or AR prompt system for remembering names, context, and safe openers during real encounters.',
+      meta: const ['Memory support', 'Wearables', 'Companion mode'],
+      accent: const Color(0xFF26638E),
+      child: NomenclatorFeature(apiClient: widget.apiClient),
+    ),
+    const _FeatureMeta(
+      id: 'moirologist',
+      shortLabel: 'Moirologist',
+      kicker: 'Plan 5',
+      title: 'Moirologist',
+      tagline: 'Instant irrational validation from a trusted squad.',
+      summary:
+          'A one-tap affirmation rescue where your chosen squad floods the moment with exaggerated support instead of advice.',
+      meta: ['Widget logic', 'Affirmation', 'Support squad'],
+      accent: Color(0xFFC06A3B),
+      child: MoirologistFeature(),
+    ),
+  ];
 
   @override
   void initState() {
@@ -191,7 +189,8 @@ class _AncientLabHomeState extends State<AncientLabHome> {
                               color: isActive ? Colors.white : AppTheme.ink,
                               fontWeight: FontWeight.w700,
                             ),
-                            onSelected: (_) => setState(() => activeIndex = index),
+                            onSelected: (_) =>
+                                setState(() => activeIndex = index),
                           );
                         },
                       ),
@@ -301,10 +300,7 @@ class _BackendStatusPanel extends StatelessWidget {
         children: [
           const Text(
             'Backend status',
-            style: TextStyle(
-              color: AppTheme.ink,
-              fontWeight: FontWeight.w800,
-            ),
+            style: TextStyle(color: AppTheme.ink, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(

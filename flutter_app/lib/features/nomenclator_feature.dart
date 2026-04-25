@@ -5,10 +5,7 @@ import '../api/app_api_models.dart';
 import '../theme/app_theme.dart';
 
 class NomenclatorFeature extends StatefulWidget {
-  const NomenclatorFeature({
-    required this.apiClient,
-    super.key,
-  });
+  const NomenclatorFeature({required this.apiClient, super.key});
 
   final AppApiClient apiClient;
 
@@ -49,7 +46,8 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
       lastSeen: 'Seen 5 weeks ago at the heritage dinner',
       cue: 'Short silver earrings, velvet blazer, warm laugh.',
       opener: 'Ask whether the youth conservation workshop sold out again.',
-      followUp: 'She mentioned her daughter was applying to architecture programs.',
+      followUp:
+          'She mentioned her daughter was applying to architecture programs.',
       contexts: const [
         _ContextCue(
           label: 'Benefit reception',
@@ -59,7 +57,8 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
         _ContextCue(
           label: 'Exit lobby',
           goal: 'Land a considerate follow-up message.',
-          prompt: 'Wish her daughter luck and ask if an introduction would help.',
+          prompt:
+              'Wish her daughter luck and ask if an introduction would help.',
         ),
       ],
       feed: const [
@@ -73,13 +72,15 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
       role: 'Product designer turned startup advisor',
       lastSeen: 'Seen 3 days ago on a founder breakfast panel',
       cue: 'Usually in monochrome layers, analog watch, gentle voice.',
-      opener: 'Thank him for the wearable intros and ask about the studio move.',
+      opener:
+          'Thank him for the wearable intros and ask about the studio move.',
       followUp: 'He moved his studio near Songshan Cultural Park.',
       contexts: const [
         _ContextCue(
           label: 'Green room',
           goal: 'Be useful and brief.',
-          prompt: 'Lead with gratitude for the intros, then one precise update.',
+          prompt:
+              'Lead with gratitude for the intros, then one precise update.',
         ),
         _ContextCue(
           label: 'Street walk',
@@ -294,7 +295,9 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
     final person = people[personIndex];
     final contextCue = person.contexts[contextIndex];
     final prompt = person.feed[promptIndex];
-    final selectedBackendPerson = backendPeople.isEmpty ? null : backendPeople[backendSelectionIndex];
+    final selectedBackendPerson = backendPeople.isEmpty
+        ? null
+        : backendPeople[backendSelectionIndex];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,7 +317,8 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
           backendError: backendError,
           backendPeople: backendPeople,
           backendSelectionIndex: backendSelectionIndex,
-          onSelectBackendPerson: (index) => setState(() => backendSelectionIndex = index),
+          onSelectBackendPerson: (index) =>
+              setState(() => backendSelectionIndex = index),
           activeSession: activeSession,
           selectedBackendPerson: selectedBackendPerson,
           nameController: _nameController,
@@ -324,7 +328,8 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
           companionController: _companionController,
           promptController: _promptController,
           deliveryMode: deliveryMode,
-          onDeliveryModeChanged: (value) => setState(() => deliveryMode = value),
+          onDeliveryModeChanged: (value) =>
+              setState(() => deliveryMode = value),
           onReload: _loadBackendPeople,
           onCreatePerson: _createPersonCard,
           onCreateSession: _createSession,
@@ -357,10 +362,14 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: personIndex == index ? const Color(0xFFE2EEF7) : Colors.white,
+                  color: personIndex == index
+                      ? const Color(0xFFE2EEF7)
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: personIndex == index ? const Color(0xFF26638E) : AppTheme.line,
+                    color: personIndex == index
+                        ? const Color(0xFF26638E)
+                        : AppTheme.line,
                   ),
                 ),
                 child: Column(
@@ -564,7 +573,9 @@ class _BackendSyncPanel extends StatelessWidget {
                 ),
               ),
               FilledButton.tonal(
-                onPressed: apiClient.isConfigured && !isLoadingBackend ? onReload : null,
+                onPressed: apiClient.isConfigured && !isLoadingBackend
+                    ? onReload
+                    : null,
                 child: const Text('Reload'),
               ),
             ],
@@ -599,7 +610,9 @@ class _BackendSyncPanel extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             if (backendPeople.isEmpty)
-              const _MutedBox(text: 'No cloud people cards yet. Create one below.')
+              const _MutedBox(
+                text: 'No cloud people cards yet. Create one below.',
+              )
             else
               ...backendPeople.asMap().entries.map((entry) {
                 final index = entry.key;
@@ -614,10 +627,14 @@ class _BackendSyncPanel extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: selected ? const Color(0xFFD9EAF6) : Colors.white,
+                        color: selected
+                            ? const Color(0xFFD9EAF6)
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: selected ? const Color(0xFF26638E) : AppTheme.line,
+                          color: selected
+                              ? const Color(0xFF26638E)
+                              : AppTheme.line,
                         ),
                       ),
                       child: Column(
@@ -659,7 +676,10 @@ class _BackendSyncPanel extends StatelessWidget {
             const SizedBox(height: 8),
             _LabeledField(controller: nameController, label: 'Name'),
             const SizedBox(height: 8),
-            _LabeledField(controller: affiliationController, label: 'Affiliation'),
+            _LabeledField(
+              controller: affiliationController,
+              label: 'Affiliation',
+            ),
             const SizedBox(height: 8),
             _LabeledField(
               controller: notesController,
@@ -669,7 +689,9 @@ class _BackendSyncPanel extends StatelessWidget {
             const SizedBox(height: 10),
             FilledButton(
               onPressed: isCreatingPerson ? null : onCreatePerson,
-              child: Text(isCreatingPerson ? 'Creating...' : 'Create people card'),
+              child: Text(
+                isCreatingPerson ? 'Creating...' : 'Create people card',
+              ),
             ),
             const SizedBox(height: 18),
             const Text(
@@ -806,19 +828,14 @@ class _LabeledField extends StatelessWidget {
         labelText: label,
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );
   }
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({
-    required this.title,
-    required this.trailing,
-  });
+  const _SectionTitle({required this.title, required this.trailing});
 
   final String title;
   final Widget trailing;

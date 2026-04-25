@@ -11,9 +11,21 @@ class SinEaterFeature extends StatefulWidget {
 
 class _SinEaterFeatureState extends State<SinEaterFeature> {
   static const recipients = [
-    ('Mercy', 'Night listener', 'Steady, discreet, never asks for a polished version.'),
-    ('Joon', 'Trusted witness', 'Reads the burden once, then keeps only the vow to hold it.'),
-    ('Rhea', 'Ritual keeper', 'Best for confessions that need structure, not advice.'),
+    (
+      'Mercy',
+      'Night listener',
+      'Steady, discreet, never asks for a polished version.',
+    ),
+    (
+      'Joon',
+      'Trusted witness',
+      'Reads the burden once, then keeps only the vow to hold it.',
+    ),
+    (
+      'Rhea',
+      'Ritual keeper',
+      'Best for confessions that need structure, not advice.',
+    ),
   ];
 
   final controller = TextEditingController();
@@ -64,20 +76,42 @@ class _SinEaterFeatureState extends State<SinEaterFeature> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: const [
-            _StageTag(label: 'Confess', active: true),
-          ],
+          children: const [_StageTag(label: 'Confess', active: true)],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _StepPill(label: 'Confess', current: stage == 'compose' || stage == 'sealed' || stage == 'consumed' || stage == 'purged')),
+            Expanded(
+              child: _StepPill(
+                label: 'Confess',
+                current:
+                    stage == 'compose' ||
+                    stage == 'sealed' ||
+                    stage == 'consumed' ||
+                    stage == 'purged',
+              ),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _StepPill(label: 'Seal', current: stage == 'sealed' || stage == 'consumed' || stage == 'purged')),
+            Expanded(
+              child: _StepPill(
+                label: 'Seal',
+                current:
+                    stage == 'sealed' ||
+                    stage == 'consumed' ||
+                    stage == 'purged',
+              ),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _StepPill(label: 'Consume', current: stage == 'consumed' || stage == 'purged')),
+            Expanded(
+              child: _StepPill(
+                label: 'Consume',
+                current: stage == 'consumed' || stage == 'purged',
+              ),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _StepPill(label: 'Purify', current: stage == 'purged')),
+            Expanded(
+              child: _StepPill(label: 'Purify', current: stage == 'purged'),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -114,10 +148,14 @@ class _SinEaterFeatureState extends State<SinEaterFeature> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: recipientIndex == index ? const Color(0xFFF0E6F8) : Colors.white,
+                    color: recipientIndex == index
+                        ? const Color(0xFFF0E6F8)
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: recipientIndex == index ? const Color(0xFF7A4D95) : AppTheme.line,
+                      color: recipientIndex == index
+                          ? const Color(0xFF7A4D95)
+                          : AppTheme.line,
                     ),
                   ),
                   child: Column(
@@ -141,9 +179,9 @@ class _SinEaterFeatureState extends State<SinEaterFeature> {
           FilledButton(
             onPressed: canSeal
                 ? () => setState(() {
-                      stage = 'sealed';
-                      sealedAt = _stamp();
-                    })
+                    stage = 'sealed';
+                    sealedAt = _stamp();
+                  })
                 : null,
             child: const Text('Seal confession'),
           ),

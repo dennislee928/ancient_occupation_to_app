@@ -14,9 +14,18 @@ class MoirologistFeature extends StatefulWidget {
 class _MoirologistFeatureState extends State<MoirologistFeature> {
   static const setbacks = [
     ('Boss criticism', 'You were unfairly singled out in front of everyone.'),
-    ('Interview rejection', 'A room failed to recognize the obvious candidate.'),
-    ('Left on read', 'Someone delayed replying to a message they should treasure.'),
-    ('Idea got ignored', 'The room simply was not calibrated for genius today.'),
+    (
+      'Interview rejection',
+      'A room failed to recognize the obvious candidate.',
+    ),
+    (
+      'Left on read',
+      'Someone delayed replying to a message they should treasure.',
+    ),
+    (
+      'Idea got ignored',
+      'The room simply was not calibrated for genius today.',
+    ),
   ];
 
   static const urgencies = [
@@ -52,7 +61,8 @@ class _MoirologistFeatureState extends State<MoirologistFeature> {
     ];
 
     return supporters.asMap().entries.map((entry) {
-      final line = lines[(entry.key + random.nextInt(lines.length)) % lines.length];
+      final line =
+          lines[(entry.key + random.nextInt(lines.length)) % lines.length];
       return '${entry.value}: $line Trigger: $setback. Mode: $urgency.';
     }).toList();
   }
@@ -118,10 +128,14 @@ class _MoirologistFeatureState extends State<MoirologistFeature> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: urgencyIndex == index ? const Color(0xFFFBE2CC) : Colors.white,
+                  color: urgencyIndex == index
+                      ? const Color(0xFFFBE2CC)
+                      : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: urgencyIndex == index ? AppTheme.warning : AppTheme.line,
+                    color: urgencyIndex == index
+                        ? AppTheme.warning
+                        : AppTheme.line,
                   ),
                 ),
                 child: Column(
@@ -152,10 +166,7 @@ class _MoirologistFeatureState extends State<MoirologistFeature> {
         ...burst.map(
           (message) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: _Panel(
-              title: 'Support burst',
-              body: message,
-            ),
+            child: _Panel(title: 'Support burst', body: message),
           ),
         ),
       ],

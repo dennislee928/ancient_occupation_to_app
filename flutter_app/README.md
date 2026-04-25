@@ -18,6 +18,33 @@ flutter pub get
 flutter run
 ```
 
+## Run Against Local Backend
+
+If the Go API is running locally on port `8080`, you can wire the Flutter app to it with:
+
+```bash
+cd flutter_app
+flutter run \
+  --dart-define=API_BASE_URL=http://127.0.0.1:8080 \
+  --dart-define=API_DEBUG_USER_ID=11111111-1111-1111-1111-111111111111
+```
+
+If you want to use a real Supabase access token instead of the development debug header:
+
+```bash
+cd flutter_app
+flutter run \
+  --dart-define=API_BASE_URL=http://127.0.0.1:8080 \
+  --dart-define=API_BEARER_TOKEN=<supabase-access-token>
+```
+
+Current backend-backed Flutter surfaces:
+
+- shell profile status via `GET /v1/me`
+- `Nomenclator` cloud people cards
+- `Nomenclator` live session creation
+- `Nomenclator` prompt sending and refresh
+
 ## Configure Real Release Identity
 
 ```bash

@@ -102,7 +102,10 @@ class NomenclatorSession {
 
   factory NomenclatorSession.fromJson(Map<String, dynamic> json) {
     final prompts = (json['prompts'] as List<dynamic>? ?? const [])
-        .map((item) => NomenclatorPromptMessage.fromJson(item as Map<String, dynamic>))
+        .map(
+          (item) =>
+              NomenclatorPromptMessage.fromJson(item as Map<String, dynamic>),
+        )
         .toList();
 
     return NomenclatorSession(

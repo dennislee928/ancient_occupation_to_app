@@ -90,8 +90,12 @@ class _RoyalTasterFeatureState extends State<RoyalTasterFeature> {
     final threatHits = _hits(threatPhrases, lower);
 
     final urgency = (urgentHits.length * 18).clamp(6, 96);
-    final emotionalHeat = (toxicHits.length * 26 + threatHits.length * 12).clamp(8, 97);
-    final manipulation = (threatHits.length * 34 + toxicHits.length * 12).clamp(6, 94);
+    final emotionalHeat = (toxicHits.length * 26 + threatHits.length * 12)
+        .clamp(8, 97);
+    final manipulation = (threatHits.length * 34 + toxicHits.length * 12).clamp(
+      6,
+      94,
+    );
     final score = (urgency + emotionalHeat + manipulation) ~/ 3;
 
     String label = 'Composed';
@@ -169,28 +173,49 @@ class _RoyalTasterFeatureState extends State<RoyalTasterFeature> {
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _StageChip(label: 'Intercepted', active: true, complete: true)),
+            Expanded(
+              child: _StageChip(
+                label: 'Intercepted',
+                active: true,
+                complete: true,
+              ),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _StageChip(label: 'Reviewed', active: stage != 'intercepted', complete: stage != 'intercepted')),
+            Expanded(
+              child: _StageChip(
+                label: 'Reviewed',
+                active: stage != 'intercepted',
+                complete: stage != 'intercepted',
+              ),
+            ),
             const SizedBox(width: 8),
-            Expanded(child: _StageChip(label: 'Delivered', active: stage == 'delivered', complete: stage == 'delivered')),
+            Expanded(
+              child: _StageChip(
+                label: 'Delivered',
+                active: stage == 'delivered',
+                complete: stage == 'delivered',
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(child: _MetricCard(label: 'Heat', value: '$emotionalHeat')),
+            Expanded(
+              child: _MetricCard(label: 'Heat', value: '$emotionalHeat'),
+            ),
             const SizedBox(width: 10),
-            Expanded(child: _MetricCard(label: 'Urgency', value: '$urgency')),
+            Expanded(
+              child: _MetricCard(label: 'Urgency', value: '$urgency'),
+            ),
             const SizedBox(width: 10),
-            Expanded(child: _MetricCard(label: 'Manipulation', value: '$manipulation')),
+            Expanded(
+              child: _MetricCard(label: 'Manipulation', value: '$manipulation'),
+            ),
           ],
         ),
         const SizedBox(height: 16),
-        _InfoPanel(
-          title: 'Pressure verdict: $label',
-          body: safeBrief,
-        ),
+        _InfoPanel(title: 'Pressure verdict: $label', body: safeBrief),
         const SizedBox(height: 16),
         if (highlights.isNotEmpty) ...[
           const Text(
@@ -206,7 +231,12 @@ class _RoyalTasterFeatureState extends State<RoyalTasterFeature> {
             spacing: 8,
             runSpacing: 8,
             children: highlights
-                .map((item) => Chip(label: Text(item), backgroundColor: AppTheme.cardSoft))
+                .map(
+                  (item) => Chip(
+                    label: Text(item),
+                    backgroundColor: AppTheme.cardSoft,
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 16),
