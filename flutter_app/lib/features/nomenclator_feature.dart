@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../api/app_api_client.dart';
+import '../api/app_api_models.dart';
 import '../theme/app_theme.dart';
 
 class NomenclatorFeature extends StatefulWidget {
-  const NomenclatorFeature({super.key});
+  const NomenclatorFeature({
+    required this.apiClient,
+    super.key,
+  });
+
+  final AppApiClient apiClient;
 
   @override
   State<NomenclatorFeature> createState() => _NomenclatorFeatureState();
@@ -88,15 +95,206 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
     ),
   ];
 
+  final _nameController = TextEditingController();
+  final _affiliationController = TextEditingController();
+  final _notesController = TextEditingController();
+  final _contextController = TextEditingController();
+  final _companionController = TextEditingController();
+  final _promptController = TextEditingController();
+
   int personIndex = 0;
   int contextIndex = 0;
   int promptIndex = 0;
+  int backendSelectionIndex = 0;
+  bool isLoadingBackend = false;
+  bool isCreatingPerson = false;
+  bool isCreatingSession = false;
+  bool isSendingPrompt = false;
+  String? backendError;
+  String deliveryMode = 'quiet';
+  List<NomenclatorPersonCard> backendPeople = const [];
+  NomenclatorSession? activeSession;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBackendPeople();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _affiliationController.dispose();
+    _notesController.dispose();
+    _contextController.dispose();
+    _companionController.dispose();
+    _promptController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadBackendPeople() async {
+    if (!widget.apiClient.isConfigured) {
+      return;
+    }
+
+    setState(() {
+      isLoadingBackend = true;
+      backendError = null;
+    });
+
+    try {
+      final people = await widget.apiClient.listPeopleCards();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        backendPeople = people;
+        if (backendSelectionIndex >= people.length) {
+          backendSelectionIndex = people.isEmpty ? 0 : people.length - 1;
+        }
+      });
+    } on AppApiException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => backendError = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => isLoadingBackend = false);
+      }
+    }
+  }
+
+  Future<void> _createPersonCard() async {
+    if (isCreatingPerson) {
+      return;
+    }
+
+    setState(() {
+      isCreatingPerson = true;
+      backendError = null;
+    });
+
+    try {
+      final person = await widget.apiClient.createPersonCard(
+        name: _nameController.text,
+        affiliation: _affiliationController.text,
+        notes: _notesController.text,
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        backendPeople = [person, ...backendPeople];
+        backendSelectionIndex = 0;
+        _nameController.clear();
+        _affiliationController.clear();
+        _notesController.clear();
+      });
+    } on AppApiException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => backendError = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => isCreatingPerson = false);
+      }
+    }
+  }
+
+  Future<void> _createSession() async {
+    if (isCreatingSession || backendPeople.isEmpty) {
+      return;
+    }
+
+    final selected = backendPeople[backendSelectionIndex];
+
+    setState(() {
+      isCreatingSession = true;
+      backendError = null;
+    });
+
+    try {
+      final session = await widget.apiClient.createSession(
+        personCardId: selected.id,
+        contextLabel: _contextController.text,
+        companionUserId: _companionController.text,
+      );
+      if (!mounted) {
+        return;
+      }
+      setState(() => activeSession = session);
+      await _refreshActiveSession();
+    } on AppApiException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => backendError = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => isCreatingSession = false);
+      }
+    }
+  }
+
+  Future<void> _refreshActiveSession() async {
+    final session = activeSession;
+    if (session == null) {
+      return;
+    }
+
+    try {
+      final latest = await widget.apiClient.getSession(session.id);
+      if (!mounted) {
+        return;
+      }
+      setState(() => activeSession = latest);
+    } on AppApiException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => backendError = error.message);
+    }
+  }
+
+  Future<void> _sendPrompt() async {
+    final session = activeSession;
+    if (isSendingPrompt || session == null) {
+      return;
+    }
+
+    setState(() {
+      isSendingPrompt = true;
+      backendError = null;
+    });
+
+    try {
+      await widget.apiClient.createPrompt(
+        sessionId: session.id,
+        body: _promptController.text,
+        deliveryMode: deliveryMode,
+      );
+      _promptController.clear();
+      await _refreshActiveSession();
+    } on AppApiException catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() => backendError = error.message);
+    } finally {
+      if (mounted) {
+        setState(() => isSendingPrompt = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final person = people[personIndex];
     final contextCue = person.contexts[contextIndex];
     final prompt = person.feed[promptIndex];
+    final selectedBackendPerson = backendPeople.isEmpty ? null : backendPeople[backendSelectionIndex];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,8 +305,35 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
               'Your backstage partner feeds discreet cues to a watch or AR layer so you can recover names, context, and safe openers in real time.',
         ),
         const SizedBox(height: 16),
+        _BackendSyncPanel(
+          apiClient: widget.apiClient,
+          isLoadingBackend: isLoadingBackend,
+          isCreatingPerson: isCreatingPerson,
+          isCreatingSession: isCreatingSession,
+          isSendingPrompt: isSendingPrompt,
+          backendError: backendError,
+          backendPeople: backendPeople,
+          backendSelectionIndex: backendSelectionIndex,
+          onSelectBackendPerson: (index) => setState(() => backendSelectionIndex = index),
+          activeSession: activeSession,
+          selectedBackendPerson: selectedBackendPerson,
+          nameController: _nameController,
+          affiliationController: _affiliationController,
+          notesController: _notesController,
+          contextController: _contextController,
+          companionController: _companionController,
+          promptController: _promptController,
+          deliveryMode: deliveryMode,
+          onDeliveryModeChanged: (value) => setState(() => deliveryMode = value),
+          onReload: _loadBackendPeople,
+          onCreatePerson: _createPersonCard,
+          onCreateSession: _createSession,
+          onSendPrompt: _sendPrompt,
+          onRefreshSession: _refreshActiveSession,
+        ),
+        const SizedBox(height: 20),
         const Text(
-          'People',
+          'Prototype cues',
           style: TextStyle(
             color: AppTheme.ink,
             fontSize: 16,
@@ -256,6 +481,384 @@ class _NomenclatorFeatureState extends State<NomenclatorFeature> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _BackendSyncPanel extends StatelessWidget {
+  const _BackendSyncPanel({
+    required this.apiClient,
+    required this.isLoadingBackend,
+    required this.isCreatingPerson,
+    required this.isCreatingSession,
+    required this.isSendingPrompt,
+    required this.backendError,
+    required this.backendPeople,
+    required this.backendSelectionIndex,
+    required this.onSelectBackendPerson,
+    required this.activeSession,
+    required this.selectedBackendPerson,
+    required this.nameController,
+    required this.affiliationController,
+    required this.notesController,
+    required this.contextController,
+    required this.companionController,
+    required this.promptController,
+    required this.deliveryMode,
+    required this.onDeliveryModeChanged,
+    required this.onReload,
+    required this.onCreatePerson,
+    required this.onCreateSession,
+    required this.onSendPrompt,
+    required this.onRefreshSession,
+  });
+
+  final AppApiClient apiClient;
+  final bool isLoadingBackend;
+  final bool isCreatingPerson;
+  final bool isCreatingSession;
+  final bool isSendingPrompt;
+  final String? backendError;
+  final List<NomenclatorPersonCard> backendPeople;
+  final int backendSelectionIndex;
+  final ValueChanged<int> onSelectBackendPerson;
+  final NomenclatorSession? activeSession;
+  final NomenclatorPersonCard? selectedBackendPerson;
+  final TextEditingController nameController;
+  final TextEditingController affiliationController;
+  final TextEditingController notesController;
+  final TextEditingController contextController;
+  final TextEditingController companionController;
+  final TextEditingController promptController;
+  final String deliveryMode;
+  final ValueChanged<String> onDeliveryModeChanged;
+  final Future<void> Function() onReload;
+  final Future<void> Function() onCreatePerson;
+  final Future<void> Function() onCreateSession;
+  final Future<void> Function() onSendPrompt;
+  final Future<void> Function() onRefreshSession;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEAF2F7),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: const Color(0xFFB7CCDB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  'Backend sync',
+                  style: TextStyle(
+                    color: AppTheme.ink,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              FilledButton.tonal(
+                onPressed: apiClient.isConfigured && !isLoadingBackend ? onReload : null,
+                child: const Text('Reload'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            apiClient.isConfigured
+                ? 'Live against ${apiClient.baseUrl} using ${apiClient.authMode.toLowerCase()}.'
+                : 'Set API_BASE_URL plus API_DEBUG_USER_ID or API_BEARER_TOKEN to use the Go backend.',
+          ),
+          if (backendError != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              backendError!,
+              style: const TextStyle(
+                color: Color(0xFFA33E2C),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          const SizedBox(height: 16),
+          if (apiClient.isConfigured) ...[
+            _SectionTitle(
+              title: 'Cloud people cards',
+              trailing: isLoadingBackend
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text('${backendPeople.length} cards'),
+            ),
+            const SizedBox(height: 8),
+            if (backendPeople.isEmpty)
+              const _MutedBox(text: 'No cloud people cards yet. Create one below.')
+            else
+              ...backendPeople.asMap().entries.map((entry) {
+                final index = entry.key;
+                final item = entry.value;
+                final selected = index == backendSelectionIndex;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: InkWell(
+                    onTap: () => onSelectBackendPerson(index),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: selected ? const Color(0xFFD9EAF6) : Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: selected ? const Color(0xFF26638E) : AppTheme.line,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.name,
+                            style: const TextStyle(
+                              color: AppTheme.ink,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          if ((item.affiliation ?? '').isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Text(item.affiliation!),
+                          ],
+                          if ((item.notes ?? '').isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Text(
+                              item.notes!,
+                              style: const TextStyle(color: AppTheme.muted),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            const SizedBox(height: 14),
+            const Text(
+              'Create a people card',
+              style: TextStyle(
+                color: AppTheme.ink,
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _LabeledField(controller: nameController, label: 'Name'),
+            const SizedBox(height: 8),
+            _LabeledField(controller: affiliationController, label: 'Affiliation'),
+            const SizedBox(height: 8),
+            _LabeledField(
+              controller: notesController,
+              label: 'Notes',
+              maxLines: 3,
+            ),
+            const SizedBox(height: 10),
+            FilledButton(
+              onPressed: isCreatingPerson ? null : onCreatePerson,
+              child: Text(isCreatingPerson ? 'Creating...' : 'Create people card'),
+            ),
+            const SizedBox(height: 18),
+            const Text(
+              'Live session',
+              style: TextStyle(
+                color: AppTheme.ink,
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              selectedBackendPerson == null
+                  ? 'Select a cloud people card first.'
+                  : 'Selected person: ${selectedBackendPerson!.name}',
+            ),
+            const SizedBox(height: 8),
+            _LabeledField(
+              controller: contextController,
+              label: 'Context label',
+            ),
+            const SizedBox(height: 8),
+            _LabeledField(
+              controller: companionController,
+              label: 'Companion user id',
+            ),
+            const SizedBox(height: 10),
+            FilledButton.tonal(
+              onPressed: selectedBackendPerson == null || isCreatingSession
+                  ? null
+                  : onCreateSession,
+              child: Text(isCreatingSession ? 'Starting...' : 'Start session'),
+            ),
+            if (activeSession != null) ...[
+              const SizedBox(height: 16),
+              _MutedBox(
+                text:
+                    'Session ${activeSession!.id}\nStatus: ${activeSession!.status}\nContext: ${activeSession!.contextLabel ?? 'none'}',
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: ['quiet', 'manual', 'urgent']
+                    .map(
+                      (mode) => ChoiceChip(
+                        label: Text(mode),
+                        selected: deliveryMode == mode,
+                        onSelected: (_) => onDeliveryModeChanged(mode),
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 8),
+              _LabeledField(
+                controller: promptController,
+                label: 'Prompt body',
+                maxLines: 3,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  FilledButton(
+                    onPressed: isSendingPrompt ? null : onSendPrompt,
+                    child: Text(isSendingPrompt ? 'Sending...' : 'Send prompt'),
+                  ),
+                  const SizedBox(width: 10),
+                  FilledButton.tonal(
+                    onPressed: onRefreshSession,
+                    child: const Text('Refresh'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (activeSession!.prompts.isEmpty)
+                const _MutedBox(text: 'No prompt messages in this session yet.')
+              else
+                ...activeSession!.prompts.map(
+                  (prompt) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: AppTheme.line),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            prompt.body,
+                            style: const TextStyle(
+                              color: AppTheme.ink,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '${prompt.deliveryMode} • ${prompt.createdAt}',
+                            style: const TextStyle(color: AppTheme.muted),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LabeledField extends StatelessWidget {
+  const _LabeledField({
+    required this.controller,
+    required this.label,
+    this.maxLines = 1,
+  });
+
+  final TextEditingController controller;
+  final String label;
+  final int maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({
+    required this.title,
+    required this.trailing,
+  });
+
+  final String title;
+  final Widget trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: AppTheme.ink,
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        trailing,
+      ],
+    );
+  }
+}
+
+class _MutedBox extends StatelessWidget {
+  const _MutedBox({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FBFD),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.line),
+      ),
+      child: Text(text),
     );
   }
 }
