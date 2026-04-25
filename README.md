@@ -47,6 +47,11 @@ Run migrations against Supabase:
 docker compose -f infra/docker-compose.yml --profile ops run --rm migrator
 ```
 
+Local API auth during development:
+
+- send `X-Debug-User-ID: <stable-user-id>` to the Go API, or
+- set `SUPABASE_JWT_SECRET` and use a bearer token
+
 Flutter verification:
 
 ```bash

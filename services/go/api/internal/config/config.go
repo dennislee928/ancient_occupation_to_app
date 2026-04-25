@@ -3,18 +3,20 @@ package config
 import "os"
 
 type Config struct {
-	AppEnv      string
-	Port        string
-	LogLevel    string
-	DatabaseURL string
+	AppEnv            string
+	Port              string
+	LogLevel          string
+	DatabaseURL       string
+	SupabaseJWTSecret string
 }
 
 func Load() Config {
 	return Config{
-		AppEnv:      envOrDefault("APP_ENV", "development"),
-		Port:        envOrDefault("API_PORT", "8080"),
-		LogLevel:    envOrDefault("LOG_LEVEL", "info"),
-		DatabaseURL: os.Getenv("SUPABASE_DATABASE_URL"),
+		AppEnv:            envOrDefault("APP_ENV", "development"),
+		Port:              envOrDefault("API_PORT", "8080"),
+		LogLevel:          envOrDefault("LOG_LEVEL", "info"),
+		DatabaseURL:       os.Getenv("SUPABASE_DATABASE_URL"),
+		SupabaseJWTSecret: os.Getenv("SUPABASE_JWT_SECRET"),
 	}
 }
 
